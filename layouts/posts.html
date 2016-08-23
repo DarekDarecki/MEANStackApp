@@ -24,27 +24,9 @@
             </ul>
 
         </div>
-
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
-        <script>
-            var app = angular.module('app', [])
-            app.controller('PostsCtrl', function($scope) {
-                $scope.posts = [
-                    {
-                        username: "Daro",
-                        body: "Polecam apkę"
-                    }, {
-                        username: "user",
-                        body: "My first post"
-                    }
-                ]
-                $scope.addPost = function() {
-                    $scope.postBody = null;
-                    $scope.posts.unshift({username: "Mareczek", body: $scope.postBody})
-                }
-            })
-        </script>
+        <script src="/app.js"></script>
     </body>
 
 </html>
