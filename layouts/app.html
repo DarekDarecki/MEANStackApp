@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <base href="/"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
+    </head>
+
+    <body ng-app="app" ng-controller="ApplicationCtrl">
+        <nav class="navbar">
+            <div class="container">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="#">Posty</a>
+                    </li>
+                    <li>
+                        <a href="/register">Rejestracja</a>
+                    </li>
+                    <li>
+                        <a href="/login">Logowanie</a>
+                    </li>
+                </ul>
+                <p ng-if='currentUser' class="">
+                    Zalogowany jako {{currentUser.username}}
+                </p>
+            </div>
+        </nav>
+        <div ng-view></div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-route.js"></script>
+        <script src="/app.js"></script>
+    </body>
+
+</html>

@@ -5,7 +5,10 @@ var app = express()
 
 app.use(bodyParser.json())
 
+app.use(require('./auth.js'))
 app.use(require('./controllers/api/posts.js'))
+app.use(require('./controllers/api/users.js'))
+app.use(require('./controllers/api/sessions.js'))
 app.use(require('./controllers/static.js'))
 
 app.listen(3000, function () {
