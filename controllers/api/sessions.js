@@ -28,20 +28,25 @@ router.post('/api/sessions', function(req, res, next) {
                 console.log("2");
                 return res.sendStatus(401)
             }
-            bcrypt.compare(req.body.password, user.password, function (err, valid) {
-                if (err) {
-                    console.log("3");
-                    return next(err)
-                }
-                if (!valid) {
-                    console.log("4");
-                    return res.sendStatus(401)
-                }
-            })
-            var token = jwt.encode({
-                username: user.username
-            }, config.secret)
-            res.json(token)
+            if (user) {
+                bcrypt.compare(req.body.password, user.password, function(err, valid) {
+                    if (err) {
+                        console.log("3");
+                        return next(err)
+                    }
+                    if (!valid) {
+                        console.log("4");
+                        return res.sendStatus(401)
+                    }
+                    if (valid) {
+                        var token = jwt.encode({
+                                username: user.username
+                            }, config.secret)
+                        res.json(token)
+                    }
+                })
+            }
+
             /*
             var user = findUserByUsername(req.body.username)
             validateUser(user, req.body.password, function (err, valid) {

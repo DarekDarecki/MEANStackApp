@@ -10,6 +10,22 @@ app.service('PostsSvc', function($http) {
     }
 })
 
+app.service('AuthSvc', function($q, $location) {
+    var t = this;
+    var xd = 0;
+    t.responseError = function(response) {
+        if (response.status == 401) {
+            xd++;
+            //$location.path('/login/').search({p: 'error'})
+        }
+        return $q.reject(response);
+    };
+})
+
+app.config(['$httpProvider', function($httpProvider) {
+    $httpProvider.interceptors.push('AuthSvc');
+}])
+
 app.service('UserSvc', function($http) {
     var t = this
     t.getUser = function() {
@@ -19,8 +35,9 @@ app.service('UserSvc', function($http) {
         return $http.post('/api/users', {
             username: username,
             password: password
-        }).then(function() {
-            return t.login(username, password)
+        })
+        .then(function() {
+            //return t.login(username, password)
         })
     }
     t.login = function(username, password) {
@@ -28,25 +45,25 @@ app.service('UserSvc', function($http) {
                 username: username,
                 password: password
             })
-            .then(function(val) {
+            .then(function(val, response) {
                 t.token = val.data
                 $http.defaults.headers.common['X-Auth'] = val.data
                 return t.getUser()
             })
     }
-    /*t.logout = function() {
+    t.logout = function() {
         delete $http.defaults.headers.common['X-Auth']
-    }*/
+    }
 })
 
-app.controller('ApplicationCtrl', function($scope, UserSvc) {
+app.controller('ApplicationCtrl', function($scope, UserSvc, AuthSvc) {
     $scope.$on('login', function(_, user) {
         $scope.currentUser = user
     })
-    /*$scope.logout = function() {
+    $scope.logout = function() {
         $scope.currentUser = undefined;
         UserSvc.logout();
-    }*/
+    }
 })
 
 app.controller('PostsCtrl', function($scope, PostsSvc) {
@@ -67,21 +84,38 @@ app.controller('PostsCtrl', function($scope, PostsSvc) {
 })
 
 app.controller('LoginCtrl', function($scope, UserSvc, $location) {
+    var t = this
     $scope.login = function(username, password) {
         UserSvc.login(username, password)
             .then(function(response) {
                 $scope.$emit('login', response.data)
-                //$location.path('/posts')
+                $location.path('/posts')
             })
+            .catch(function(){
+                return t.error()
+            })
+    }
+    t.error = function () {
+        $scope.class = "invalid"
+        $scope.error = "Nieprawidłowy login lub hasło"
     }
 })
 
-app.controller('RegisterCtrl', function($scope, UserSvc) {
+app.controller('RegisterCtrl', function($scope, UserSvc, $location) {
+    var t = this
     $scope.register = function(username, password) {
         UserSvc.register(username, password)
             .then(function(user) {
-                $scope.$emit('login', user)
+                //$scope.$emit('login', user)
+                $location.path('/login')
             })
+            .catch(function(response){
+                return t.error(response)
+            })
+    }
+    t.error = function () {
+        $scope.class = "invalid"
+        $scope.error = "Podana nazwa użytkownika już istnieje"
     }
 })
 
@@ -91,7 +125,7 @@ app.config(function($routeProvider, $locationProvider) {
         requireBase: false
     });
     $routeProvider
-        .when('/', {
+        .when('/posts', {
             controller: 'PostsCtrl',
             templateUrl: 'posts.html'
         })
