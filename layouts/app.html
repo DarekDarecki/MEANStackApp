@@ -12,9 +12,10 @@
         <nav class="navbar">
             <div class="container">
                 <ul class="nav navbar-nav">
-                    <li>
-                        <a href="#">Posty</a>
-                    </li>
+                    <!--
+                    <li ng-if='currentUser'>
+                        <a href="/posts">Posty</a>
+                    </li> -->
                     <li>
                         <a href="/register">Rejestracja</a>
                     </li>
@@ -24,6 +25,7 @@
                 </ul>
                 <p ng-if='currentUser' class="">
                     Zalogowany jako {{currentUser.username}}
+                        <a href="/" ng-click="logout()">Wyloguj</a>
                 </p>
             </div>
         </nav>

@@ -15,9 +15,6 @@ app.service('UserSvc', function($http) {
     t.getUser = function() {
         return $http.get('/api/users')
     }
-    t.createUser = function() {
-
-    }
     t.register = function(username, password) {
         return $http.post('/api/users', {
             username: username,
@@ -37,12 +34,19 @@ app.service('UserSvc', function($http) {
                 return t.getUser()
             })
     }
+    /*t.logout = function() {
+        delete $http.defaults.headers.common['X-Auth']
+    }*/
 })
 
-app.controller('ApplicationCtrl', function($scope) {
+app.controller('ApplicationCtrl', function($scope, UserSvc) {
     $scope.$on('login', function(_, user) {
         $scope.currentUser = user
     })
+    /*$scope.logout = function() {
+        $scope.currentUser = undefined;
+        UserSvc.logout();
+    }*/
 })
 
 app.controller('PostsCtrl', function($scope, PostsSvc) {
@@ -62,11 +66,12 @@ app.controller('PostsCtrl', function($scope, PostsSvc) {
     })
 })
 
-app.controller('LoginCtrl', function($scope, UserSvc) {
+app.controller('LoginCtrl', function($scope, UserSvc, $location) {
     $scope.login = function(username, password) {
         UserSvc.login(username, password)
             .then(function(response) {
                 $scope.$emit('login', response.data)
+                //$location.path('/posts')
             })
     }
 })

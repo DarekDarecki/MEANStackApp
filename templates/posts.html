@@ -1,4 +1,4 @@
-<div class="container" ng-controller="PostsCtrl">
+<div class="container" ng-show="currentUser" ng-controller="PostsCtrl">
     <button class="btn" ng-click='addPost()'>Dodaj post</button>
     <input ng-model="postBody" />
     <h1>Posty</h1>

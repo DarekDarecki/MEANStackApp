@@ -21,16 +21,20 @@ router.post('/api/sessions', function(req, res, next) {
         .select('password').select('username')
         .exec(function(err, user) {
             if (err) {
+                console.log("1");
                 return next(err)
             }
             if (!user) {
+                console.log("2");
                 return res.sendStatus(401)
             }
             bcrypt.compare(req.body.password, user.password, function (err, valid) {
                 if (err) {
+                    console.log("3");
                     return next(err)
                 }
                 if (!valid) {
+                    console.log("4");
                     return res.sendStatus(401)
                 }
             })
