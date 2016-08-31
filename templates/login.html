@@ -1,14 +1,21 @@
 <div class="container">
-    <form ng-submit="login(username, password)">
-        <div class="input-field">
-            <input class="{{class}}" id="username" type="text" name="username" ng-model="username" autocomplete="off" required/>
-            <label for="username">Username</label>
+    <div class="card cardBox">
+        <div class="card-content">
+            <p class="card-title">ZALOGUJ SIĘ</p>
+            <form ng-submit="login(username, password)">
+                <div class="input-field">
+                    <input class="{{class}}" id="username" type="text" name="username" ng-model="username" autocomplete="off" required/>
+                    <label class="{{class}}" for="username">Username</label>
+                </div>
+                <div class="input-field">
+                    <input class="{{class}}" type="password" name="password" ng-model="password" required/>
+                    <label class="{{class}}" for="password">Password</label>
+                </div>
+                <p class="error">
+                    {{error}}
+                </p>
+                <button class="btn btn-success waves-effect waves-light" type="submit">Zaloguj</button>
+            </form>
         </div>
-        <div class="input-field">
-            <input class="{{class}}" type="password" name="password" ng-model="password" required/>
-            <label for="password">Password</label>
-        </div>
-        {{error}}
-        <button class="btn btn-success" type="submit">Zaloguj</button>
-    </form>
+    </div>
 </div>

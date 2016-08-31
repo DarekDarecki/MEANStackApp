@@ -5,7 +5,8 @@ var _ = require('lodash')
 var bcrypt = require('bcrypt')
 var User = require('../../models/user')
 var config = require('../../config')
-
+var invalidAttempts = 0;
+var sanitize = require('mongo-sanitize');
 
 function findUserByUsername(username) {
     return _.find(users, {
@@ -15,46 +16,41 @@ function findUserByUsername(username) {
 
 
 router.post('/api/sessions', function(req, res, next) {
-    User.findOne({
-            username: req.body.username
-        })
-        .select('password').select('username')
-        .exec(function(err, user) {
-            if (err) {
-                console.log("1");
-                return next(err)
-            }
-            if (!user) {
-                console.log("2");
-                return res.sendStatus(401)
-            }
-            if (user) {
-                bcrypt.compare(req.body.password, user.password, function(err, valid) {
-                    if (err) {
-                        console.log("3");
-                        return next(err)
-                    }
-                    if (!valid) {
-                        console.log("4");
-                        return res.sendStatus(401)
-                    }
-                    if (valid) {
-                        var token = jwt.encode({
-                                username: user.username
-                            }, config.secret)
-                        res.json(token)
-                    }
-                })
-            }
+    setTimeout(function(err, user) {
+        User.findOne({
+                username: sanitize(req.body.username)
+            })
+            .select('password').select('username')
+            .exec(function(err, user) {
+                //console.log("XD: " + invalidAttempts);
 
-            /*
-            var user = findUserByUsername(req.body.username)
-            validateUser(user, req.body.password, function (err, valid) {
-                if (err || !valid){
+                if (err) {
+                    return next(err)
+                }
+                if (!user) {
+                    invalidAttempts++;
                     return res.sendStatus(401)
                 }
-            })*/
-        })
+                if (user) {
+                    bcrypt.compare(sanitize(req.body.password), user.password, function(err, valid) {
+                        if (err) {
+                            return next(err)
+                        }
+                        if (!valid) {
+                            invalidAttempts++;
+                            return res.sendStatus(401)
+                        }
+                        if (valid) {
+                            invalidAttempts = 0;
+                            var token = jwt.encode({
+                                username: user.username
+                            }, config.secret)
+                            res.json(token)
+                        }
+                    })
+                }
+            })
+    }, invalidAttempts*1000)
 })
 
 module.exports = router

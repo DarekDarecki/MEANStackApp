@@ -4,37 +4,45 @@ var jwt = require('jwt-simple')
 var User = require('../../models/user')
 var bcrypt = require('bcrypt')
 var config = require('../../config')
+var sanitize = require('mongo-sanitize');
 
 router.post('/api/users', function(req, res, next) {
-    var user = new User({
-        username: req.body.username
-    })
-    User.findOne({
-        username: req.body.username
-    }, function(err, user) {
-        if (err) {
-            return next(err)
-        }
-        if (user) {
-            res.sendStatus(409)
-        } else {
-            createUser()
-        }
-    })
-    function createUser() {
-        bcrypt.hash(req.body.password, 10, function(err, hash) {
-        if (err) {
-            return next(err)
-        }
-        user.password = hash
-        user.save(function(err) {
+    if (req.body.username && req.body.password) {
+        var username = sanitize(req.body.username)
+        var password = sanitize(req.body.password)
+
+        var user = new User({
+            username: username
+        })
+        User.findOne({
+            username: username
+        }, function(err, user) {
             if (err) {
                 return next(err)
             }
-            res.sendStatus(201)
+            if (user) {
+                res.sendStatus(409)
+            } else {
+                createUser()
+            }
         })
-    })
-}
+    } else {
+        console.log("pusto");
+    }
+    function createUser() {
+        bcrypt.hash(password, 10, function(err, hash) {
+            if (err) {
+                return next(err)
+            }
+            user.password = hash
+            user.save(function(err) {
+                if (err) {
+                    return next(err)
+                }
+                res.sendStatus(201)
+            })
+        })
+    }
 
 })
 

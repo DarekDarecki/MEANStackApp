@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="pl">
 
-    <head>
-        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <base href="/"/>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
-    </head>
+<head>
+    <base href="/" />
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
+    <link rel="stylesheet" href="css/main.css" />
+</head>
 
-    <body ng-app="app" ng-controller="ApplicationCtrl">
+<body ng-app="app" ng-controller="ApplicationCtrl">
+    <div class="navbar-fixed">
         <nav class="navbar">
             <div class="container">
                 <ul class="nav navbar-nav">
@@ -19,18 +21,26 @@
                         <a href="/login">Logowanie</a>
                     </li>
                 </ul>
-                <p ng-show='currentUser' class="">
-                    Zalogowany jako {{currentUser.username}}
+                <ul ng-show='currentUser' class="navbar-nav">
+                    <li>
+                        <p class="username">
+                            Zalogowany jako {{currentUser.username}}
+                        </p>
+                    </li>
+                    <li>
                         <a href="/" ng-click="logout()">Wyloguj</a>
-                </p>
+                    </li>
+                </ul>
             </div>
         </nav>
-        <div ng-view></div>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-route.js"></script>
-        <script src="/app.js"></script>
-    </body>
+    </div>
+    <div ng-view class="slide"></div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-route.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.js"></script>
+    <script src="/app.js"></script>
+</body>
 
 </html>
